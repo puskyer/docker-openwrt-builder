@@ -1,9 +1,11 @@
-FROM ubuntu:18.04
+FROM ubuntu:openwrt
 
 RUN apt-get update &&\
-    apt-get install -y sudo time git-core subversion build-essential gcc-multilib \
+    apt-get -y dist-upgrade &&\
+    apt-get install -y sudo time nano git subversion build-essential gcc-multilib libssl-dev \
                        libncurses5-dev zlib1g-dev gawk flex gettext wget unzip python &&\
-    apt-get clean
+    sudo apt-get autoremove  &&\
+    sudo apt-get autoclean
 
 RUN useradd -m openwrt &&\
     echo 'openwrt ALL=NOPASSWD: ALL' > /etc/sudoers.d/openwrt
@@ -11,10 +13,29 @@ RUN useradd -m openwrt &&\
 USER openwrt
 WORKDIR /home/openwrt
 
-RUN git clone git@github.com:openwrt/chaos_calmer.git &&\
+RUN git clone https://github.com/openwrt/chaos_calmer.git &&\
+    cd ~/chaos_calmer &&\
+    echo '--- ./include/prereq-build.mk	2020-08-02 13:04:23.376226079 -0400' >prereq-build.patch &&\
+    echo '+++ prereq-build.mk	2020-08-02 13:07:22.219413867 -0400' >>prereq-build.patch &&\
+    echo '@@ -145,7 +145,7 @@' >>prereq-build.patch &&\
+    echo '	svn --version | grep Subversion))' >>prereq-build.patch &&\
+    echo ' ' >>prereq-build.patch &&\
+    echo ' $(eval $(call SetupHostCommand,git,Please install Git (git-core) >= 1.6.5, \' >>prereq-build.patch &&\
+    echo '-	git clone 2>&1 | grep -- --recursive))' >>prereq-build.patch &&\
+    echo '+	git clone 2>&1 | grep -- --recurse-submodules))' >>prereq-build.patch &&\
+    echo ' ' >>prereq-build.patch &&\
+    echo ' $(eval $(call SetupHostCommand,file,Please install the 'file' package, \' >>prereq-build.patch &&\
+    echo '	file --version 2>&1 | grep file))' >>prereq-build.patch &&\
+    patch ./include/prereq-build.mk < ./prereq-build.patch &&\
     cp feeds.conf.default feeds.conf &&\
-    echo "src-git onion https://github.com/OnionIoT/OpenWRT-Packages.git" >> feeds.conf &&\
-    openwrt/scripts/feeds update -a
+    echo 'src-git onion https://github.com/OnionIoT/OpenWRT-Packages.git' >> feeds.conf &&\
+    ln -s /home/source dl &&\
+    ./scripts/feeds update -a &&\
+    ./scripts/feeds install -a &&\
+    make prereq && \
+    make download
+
+
     
     
 

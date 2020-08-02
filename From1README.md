@@ -21,6 +21,21 @@ add $USER to docker group
 and
 sudo setfacl -m user:$USER:rw /var/run/docker.sock
 
+to build
+
+docker run -v ~/OnionOmega/ArduinoDock/OpenWRT/:/source -it ubuntu:18.04 /bin/bash
+
+the OpenWRT has the folder source with all the openwrt source for dl
+cp -a /source /home/
+then do a
+
+docker commit <Container ID> ubuntu:openwrt
+
+the Dockerfile users ubuntu:openwrt as its starting image
+
+then build
+
+docker build -it openwrt_builder .
 
 More information on how to use this buildroot can be found on the
 [OpenWRT wiki](http://wiki.openwrt.org/doc/howto/build).
