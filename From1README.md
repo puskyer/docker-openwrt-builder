@@ -16,5 +16,11 @@ To run a shell in the buildroot, execute the following command:
 docker run -it noonien/openwrt-buildroot bash
 ```
 
+To run docker without using sudo
+add $USER to docker group
+and
+sudo setfacl -m user:$USER:rw /var/run/docker.sock
+
+
 More information on how to use this buildroot can be found on the
 [OpenWRT wiki](http://wiki.openwrt.org/doc/howto/build).
