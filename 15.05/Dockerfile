@@ -12,8 +12,8 @@ USER openwrt
 WORKDIR /home/openwrt
 
 RUN git clone git@github.com:openwrt/chaos_calmer.git &&\
-    cp feeds.conf.default feeds.conf
-    echo "src-git onion https://github.com/OnionIoT/OpenWRT-Packages.git" >> feeds.conf
+    cp feeds.conf.default feeds.conf &&\
+    echo "src-git onion https://github.com/OnionIoT/OpenWRT-Packages.git" >> feeds.conf &&\
     openwrt/scripts/feeds update -a
     
     
