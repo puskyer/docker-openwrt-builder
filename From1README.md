@@ -21,7 +21,7 @@ add $USER to docker group
 and
 sudo setfacl -m user:$USER:rw /var/run/docker.sock
 
-to build
+to build Dockerfile build image
 
 docker run -v ~/OnionOmega/ArduinoDock/OpenWRT/:/source -it ubuntu:18.04 /bin/bash
 
@@ -33,9 +33,19 @@ docker commit <Container ID> ubuntu:openwrt
 
 the Dockerfile users ubuntu:openwrt as its starting image
 
-then build
+then build using the Dockerfile in the openwrt version you what 15.0x etc
 
 docker build -it openwrt_builder .
+
+
+NTE: for Chaos_calmer Onion Omega ----
+
+edit  ~/chaos_calmer/feeds/onion/i2c-exp-driver/Makefile change 
+=3.6 to 3.4 for python
+
+docker run -v ~/OnionOmega/ArduinoDock/OpenWRT/:/source -it ubuntu_16.04:openwrt_15.05 /bin/bash
+
+
 
 More information on how to use this buildroot can be found on the
 [OpenWRT wiki](http://wiki.openwrt.org/doc/howto/build).

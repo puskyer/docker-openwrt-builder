@@ -3,7 +3,8 @@ FROM ubuntu:openwrt
 RUN apt-get update &&\
     apt-get -y dist-upgrade &&\
     apt-get install -y sudo time nano git subversion build-essential gcc-multilib libssl-dev \
-                       libncurses5-dev zlib1g-dev gawk flex gettext wget unzip python &&\
+                       libncurses5-dev zlib1g-dev gawk flex gettext wget unzip \
+                       python libpython-dev python-dev mlocate dlocate debtags &&\
     sudo apt-get autoremove  &&\
     sudo apt-get autoclean
 
