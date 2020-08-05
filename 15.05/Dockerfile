@@ -2,9 +2,13 @@ FROM ubuntu:openwrt
 
 RUN apt-get update &&\
     apt-get -y dist-upgrade &&\
+    apt-get install software-properties-common python-software-properties &&\
+    add-apt-repository ppa:deadsnakes/ppa &&\
+    apt-get update &&\
     apt-get install -y sudo time nano git subversion build-essential gcc-multilib libssl-dev \
                        libncurses5-dev zlib1g-dev gawk flex gettext wget unzip \
-                       python libpython-dev python-dev mlocate dlocate debtags &&\
+                       python libpython-dev python-dev python3.6 python3.6-dev libpython3.6-dev mlocate dlocate debtags \
+                       libpthread-stubs0-dev libpthread-workqueue-dev libxml-simpleobject-perl libxml-simpleobject-enhanced-perl &&\
     sudo apt-get autoremove  &&\
     sudo apt-get autoclean
 
@@ -37,6 +41,6 @@ RUN git clone https://github.com/openwrt/chaos_calmer.git &&\
     make download
 
 
-    
+
     
 
