@@ -46,6 +46,22 @@ edit  ~/chaos_calmer/feeds/onion/i2c-exp-driver/Makefile change
 docker run -v ~/OnionOmega/ArduinoDock/OpenWRT/:/source -it ubuntu_16.04:openwrt_15.05 /bin/bash
 
 
+Issues & Fix
+
+compiling issues with dht-sensors get the following error
+
+Package dht-sensor is missing dependencies for the following libraries:
+librt.so.0
+
+To fix
+
+edit /home/openwrt/chaos_calmer/feeds/onion/dht-sensor/Makefile 
+change
+	DEPENDS:= $(CXX_DEPENDS)
+to
+        DEPENDS:= +librt $(CXX_DEPENDS)
+
+then it works
 
 More information on how to use this buildroot can be found on the
 [OpenWRT wiki](http://wiki.openwrt.org/doc/howto/build).
