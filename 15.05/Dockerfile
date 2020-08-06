@@ -7,8 +7,10 @@ RUN apt-get update &&\
     apt-get update &&\
     apt-get install -y sudo time nano git subversion build-essential gcc-multilib libssl-dev \
                        libncurses5-dev zlib1g-dev gawk flex gettext wget unzip \
-                       python libpython-dev python-dev python3.6 python3.6-dev libpython3.6 libpython3.6-dev mlocate dlocate debtags \
-                       libpthread-stubs0-dev libpthread-workqueue-dev libxml-simpleobject-perl libxml-simpleobject-enhanced-perl &&\
+                       python libpython-dev python-dev python-yaml \
+                       python3.6 python3.6-dev libpython3.6 libpython3.6-dev python3-yaml \
+                       mlocate dlocate debtags libpthread-stubs0-dev libpthread-workqueue-dev \
+                       libxml-simpleobject-perl libxml-simpleobject-enhanced-perl &&\
     sudo apt-get autoremove  &&\
     sudo apt-get autoclean
     
