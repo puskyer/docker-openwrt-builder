@@ -1,0 +1,17 @@
+cp -a ./build_dir/target-mips_34kc_uClibc-0.9.33.2/linux-ar71xx_generic/linux-3.18.109/include/linux /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/ &&\
+    cp -a ./build_dir/target-mips_34kc_uClibc-0.9.33.2/linux-ar71xx_generic/linux-3.18.109/drivers/gpio/ /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/linux/
+    cp -a ./build_dir/target-mips_34kc_uClibc-0.9.33.2/linux-ar71xx_generic/linux-3.18.109/include/uapi/ /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/
+    cp -a  /home/openwrt/chaos_calmer/build_dir/target-mips_34kc_uClibc-0.9.33.2/linux-ar71xx_generic/linux-3.18.109/include/asm-generic/ /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/
+    cp -a /home/openwrt/chaos_calmer/build_dir/target-mips_34kc_uClibc-0.9.33.2/linux-ar71xx_generic/linux-3.18.109/include/generated/ /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/
+    ln -s  /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/uapi/asm/ /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/asm
+    ln -s  /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/uapi/asm/mach-generic/spaces.h /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/spaces.h
+    ln -s /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/uapi/asm/mach-generic/kmalloc.h /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/kmalloc.h
+    ln -s /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/uapi/asm/mach-generic/cpu-feature-overrides.h /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/cpu-feature-overrides.h
+    ln -s  /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/uapi/asm/war.h /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/war.h
+    ln -s /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/asm-generic/current.h /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/asm/current.h
+    ln -s /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/asm-generic/preempt.h /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/asm/preempt.h
+    ln -s /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/uapi/asm/mach-generic/ioremap.h /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/ioremap.h
+    ln -s /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/uapi/asm/mach-generic/mangle-port.h /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/mangle-port.h
+    ln -s /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/asm-generic/rwsem.h /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/asm/rwsem.h
+    ln -s /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/asm-generic/percpu.h /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/asm/percpu.h
+    ln -s /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/asm-generic/topology.h /home/openwrt/chaos_calmer/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include/topology.h
