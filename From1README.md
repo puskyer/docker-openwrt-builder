@@ -60,7 +60,6 @@ Issues with compiling i2c-exp-driver
 edit  /home/openwrt/chaos_calmer/feeds/onion/i2c-exp-driver/Makefile change 
 =3.6 to 3.4 for python
 
-
 compiling issues with dht-sensors get the following error
 
 Package dht-sensor is missing dependencies for the following libraries:

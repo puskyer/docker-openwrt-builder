@@ -54,21 +54,3 @@ RUN git clone https://github.com/openwrt/chaos_calmer.git &&\
     make download &&\
     make toolchain/compile &&\
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
