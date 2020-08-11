@@ -48,6 +48,8 @@ RUN git clone https://github.com/openwrt/chaos_calmer.git &&\
     ./scripts/feeds install -a &&\
     sed s/PYTHON_VERSION_3_6:=3.6/PYTHON_VERSION_3_6:=3.4/ feeds/onion/i2c-exp-driver/Makefile >/tmp/Makefile &&\
     cp /tmp/Makefile feeds/onion/i2c-exp-driver/Makefile &&\
+    sed s/PYTHON3_VERSION = 3.6/PYTHON3_VERSION = 3.4/ feeds/onion/python-spidev/Makefile >/tmp/Makefile &&\
+    cp /tmp/Makefile feeds/onion/python-spidev/Makefile &&\
     sed 's/DEPENDS:= $(CXX_DEPENDS)/DEPENDS:= +librt $(CXX_DEPENDS)/' /home/openwrt/chaos_calmer/feeds/onion/dht-sensor/Makefile >/tmp/Makefile &&\
     cp /tmp/Makefile /home/openwrt/chaos_calmer/feeds/onion/dht-sensor/Makefile &&\
     make prereq && \
