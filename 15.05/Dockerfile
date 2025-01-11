@@ -2,10 +2,22 @@ FROM ubuntu:openwrt
 
 RUN apt-get update &&\
     apt-get -y dist-upgrade &&\
+    apt-get install -y software-properties-common python-software-properties &&\
+#    add-apt-repository ppa:deadsnakes/ppa &&\
+#    apt-get update &&\
     apt-get install -y sudo time nano git subversion build-essential gcc-multilib libssl-dev \
-                       libncurses5-dev zlib1g-dev gawk flex gettext wget unzip python &&\
+                       libncurses5-dev zlib1g-dev gawk flex gettext wget unzip \
+ #                      python3.6 python3.6-dev libpython3.6 libpython3.6-dev \
+                       python libpython-dev python-dev python-yaml python3-yaml \
+                       mlocate dlocate debtags libpthread-stubs0-dev libpthread-workqueue-dev \
+                       libxml-simpleobject-perl libxml-simpleobject-enhanced-perl &&\
     sudo apt-get autoremove  &&\
     sudo apt-get autoclean
+    
+#RUN sudo rm /usr/bin/python3 &&\
+#    sudo ln -s  python3.6 /usr/bin/python3 &&\
+#    sudo rm /usr/bin/python3m &&\
+#    sudo ln -s python3.6m /usr/bin/python3m &&\
 
 RUN useradd -m openwrt &&\
     echo 'openwrt ALL=NOPASSWD: ALL' > /etc/sudoers.d/openwrt
@@ -29,13 +41,18 @@ RUN git clone https://github.com/openwrt/chaos_calmer.git &&\
     patch ./include/prereq-build.mk < ./prereq-build.patch &&\
     cp feeds.conf.default feeds.conf &&\
     echo 'src-git onion https://github.com/OnionIoT/OpenWRT-Packages.git' >> feeds.conf &&\
+    sed  's/src-git telephony \(.*\)$/\#src-git telephony \1/' feeds.conf >/tmp/feeds.conf &&\
+    cp /tmp/feeds.conf feeds.conf &&\
     ln -s /home/source dl &&\
     ./scripts/feeds update -a &&\
     ./scripts/feeds install -a &&\
+    sed s/PYTHON_VERSION_3_6:=3.6/PYTHON_VERSION_3_6:=3.4/ feeds/onion/i2c-exp-driver/Makefile >/tmp/Makefile &&\
+    cp /tmp/Makefile feeds/onion/i2c-exp-driver/Makefile &&\
+    sed s/PYTHON3_VERSION = 3.6/PYTHON3_VERSION = 3.4/ feeds/onion/python-spidev/Makefile >/tmp/Makefile &&\
+    cp /tmp/Makefile feeds/onion/python-spidev/Makefile &&\
+    sed 's/DEPENDS:= $(CXX_DEPENDS)/DEPENDS:= +librt $(CXX_DEPENDS)/' /home/openwrt/chaos_calmer/feeds/onion/dht-sensor/Makefile >/tmp/Makefile &&\
+    cp /tmp/Makefile /home/openwrt/chaos_calmer/feeds/onion/dht-sensor/Makefile &&\
     make prereq && \
-    make download
-
-
+    make download &&\
+    make toolchain/compile &&\
     
-    
-
