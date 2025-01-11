@@ -22,23 +22,28 @@ RUN apt update &&\
 
 USER pusky
 WORKDIR /home/pusky
+RUN mkdir source
+WORKDIR /home/pusky/source
 RUN mkdir sources
-# set git config
-RUN git config --global user.name "pusky" && git config --global user.email "puskyer@gmail.com"
 RUN openwrtbranch=openwrt-24.10
 RUN openwrttag=v24.10.0-rc5
+# set git config
+RUN git config --global user.name "pusky" && git config --global user.email "puskyer@gmail.com"
 # Download and update the sources
 RUN git clone https://git.openwrt.org/openwrt/openwrt.git -b $openwrtbranch openwrt
-WORKDIR /home/pusky/openwrt
+WORKDIR /home/pusky/source/openwrt
 RUN git pull
 RUN git fetch -t
 RUN git checkout $openwrttag
 RUN ln -s /home/pusky/archive/sources dl
+RUN ln -s /home/pusky/archive/bin bin/
+
 RUN cp /home/pusky/archive/x86diffconfig .config
 RUN ./scripts/feeds update -a && ./scripts/feeds install -a
-RUN make difconfig
+RUN make diffconfig
 RUN make prereq
 RUN make download
+RUN make toolchain/compile
 
 CMD ["bash"]
 
