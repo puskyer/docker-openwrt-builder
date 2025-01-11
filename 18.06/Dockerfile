@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:openwrt
 
 RUN apt-get update &&\
     apt-get install -y sudo time git-core subversion build-essential gcc-multilib \
@@ -12,5 +12,23 @@ USER openwrt
 WORKDIR /home/openwrt
 
 RUN git clone git://git.openwrt.org/openwrt/openwrt.git -b openwrt-18.06 &&\
-    openwrt/scripts/feeds update -a
-
+    cd ~/chaos_calmer &&\
+    echo '--- ./include/prereq-build.mk 2020-08-02 13:04:23.376226079 -0400' >prereq-build.patch &&\
+    echo '+++ prereq-build.mk   2020-08-02 13:07:22.219413867 -0400' >>prereq-build.patch &&\
+    echo '@@ -145,7 +145,7 @@' >>prereq-build.patch &&\
+    echo '      svn --version | grep Subversion))' >>prereq-build.patch &&\
+    echo ' ' >>prereq-build.patch &&\
+    echo ' $(eval $(call SetupHostCommand,git,Please install Git (git-core) >= 1.6.5, \' >>prereq-build.patch &&\
+    echo '-     git clone 2>&1 | grep -- --recursive))' >>prereq-build.patch &&\
+    echo '+     git clone 2>&1 | grep -- --recurse-submodules))' >>prereq-build.patch &&\
+    echo ' ' >>prereq-build.patch &&\
+    echo ' $(eval $(call SetupHostCommand,file,Please install the 'file' package, \' >>prereq-build.patch &&\
+    echo '      file --version 2>&1 | grep file))' >>prereq-build.patch &&\
+    patch ./include/prereq-build.mk < ./prereq-build.patch &&\
+    cp feeds.conf.default feeds.conf &&\
+    echo 'src-git onion https://github.com/OnionIoT/OpenWRT-Packages.git' >> feeds.conf &&\
+    ln -s /home/source dl &&\
+    ./scripts/feeds update -a &&\
+    ./scripts/feeds install -a &&\
+    make prereq && \
+    make download
