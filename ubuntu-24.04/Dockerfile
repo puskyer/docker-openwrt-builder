@@ -9,12 +9,15 @@
 
 FROM ubuntu:noble
 
+RUN echo America/Montreal >/etc/timezone
+RUN export DEBIAN_FRONTEND=noninteractive
+
 RUN apt update &&\
     apt install -y apt-utils sudo time git subversion build-essential clang bison g++ \
     gcc-multilib g++-multilib bash make libssl-dev patch libncurses6 libncurses-dev libssl-dev zlib1g-dev gawk flex gettext \
     binutils-doc bison-doc bzip2-doc clang-18-doc cpp-doc flex-doc gcc-13-doc gawk-doc autoconf automake libtool gcc-doc \
     gettext-doc icu-doc ncurses-doc libssl-doc libstdc++-13-doc llvm-18-doc m4-doc make-doc pinentry-doc python3-doc \ 
-    python-pygments-doc python-setuptools-doc  python3.12-doc readline-doc swig-doc \
+    python-pygments-doc python-setuptools-doc  python3.12-doc readline-doc swig-doc man-db dialog \
     wget file  unzip xz-utils python3 python3-distutils-extra python3-setuptools rsync swig unzip nano && \
     apt clean && \
     useradd -m -U -s /bin/bash -G sudo pusky && \
@@ -25,22 +28,26 @@ WORKDIR /home/pusky
 RUN mkdir source
 WORKDIR /home/pusky/source
 RUN mkdir sources
+RUN mkdir bin
 RUN openwrtbranch=openwrt-24.10
 RUN openwrttag=v24.10.0-rc5
 # set git config
 RUN git config --global user.name "pusky" && git config --global user.email "puskyer@gmail.com"
 # Download and update the sources
-RUN git clone https://git.openwrt.org/openwrt/openwrt.git -b $openwrtbranch openwrt
+RUN git clone https://git.openwrt.org/openwrt/openwrt.git -b openwrt-24.10 openwrt
 WORKDIR /home/pusky/source/openwrt
 RUN git pull
 RUN git fetch -t
-RUN git checkout $openwrttag
-RUN ln -s /home/pusky/archive/sources dl
-RUN ln -s /home/pusky/archive/bin bin/
-
-RUN cp /home/pusky/archive/x86diffconfig .config
-RUN ./scripts/feeds update -a && ./scripts/feeds install -a
-RUN make diffconfig
+RUN git checkout v24.10.0-rc5
+RUN cp feeds.conf.default  feeds.conf
+COPY x86diffconfig .config
+RUN sudo chmod a+rwx .config
+RUN ln -s /home/pusky/source/sources dl
+RUN ln -s /home/pusky/source/bin bin
+RUN ./scripts/feeds update -a
+RUN ./scripts/feeds update -a
+RUN ./scripts/feeds install -a
+RUN make defconfig
 RUN make prereq
 RUN make download
 RUN make toolchain/compile
