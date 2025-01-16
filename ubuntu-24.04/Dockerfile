@@ -9,48 +9,62 @@
 
 FROM ubuntu:noble
 
-RUN echo America/Montreal >/etc/timezone
-RUN export DEBIAN_FRONTEND=noninteractive
-
-RUN apt update &&\
-    apt install -y apt-utils sudo time git subversion build-essential clang bison g++ \
-    gcc-multilib g++-multilib bash make libssl-dev patch libncurses6 libncurses-dev libssl-dev zlib1g-dev gawk flex gettext \
-    binutils-doc bison-doc bzip2-doc clang-18-doc cpp-doc flex-doc gcc-13-doc gawk-doc autoconf automake libtool gcc-doc \
-    gettext-doc icu-doc ncurses-doc libssl-doc libstdc++-13-doc llvm-18-doc m4-doc make-doc pinentry-doc python3-doc \ 
-    python-pygments-doc python-setuptools-doc  python3.12-doc readline-doc swig-doc man-db dialog \
-    wget file  unzip xz-utils python3 python3-distutils-extra python3-setuptools rsync swig unzip nano && \
-    apt clean && \
+RUN echo America/Montreal >/etc/timezone && export DEBIAN_FRONTEND=noninteractive && \
+    apt update && apt -y upgrade && apt install --no-install-recommends --no-install-suggests --yes  \ 
+    'build-essential' \
+    'ca-certificates' \
+    'clang' \
+    'flex' \
+    'bison' \
+    'g++' \
+    'gawk' \
+    'gcc-multilib' \
+    'g++-multilib' \
+    'gettext' \
+    'git' \
+    'libncurses6' \
+    'libncurses-dev' \
+    'libssl-dev' \
+    'python3-distutils-extra' \
+    'python3-setuptools' \
+    'rsync' \
+    'unzip' \
+    'zlib1g-dev' \
+    'file' \
+    'wget' \
+    'apt-utils' \
+    'sudo' \
+    'time' \
+    'subversion' \
+    'bash' \
+    'patch' \
+    'dialog' \
+    'xz-utils' \
+    'nano' \ 
+    'autoconf' \
+    'automake' \
+    'libtool' \
+    'man-db' && \
+    apt clean &&  apt autoremove && apt autoclean && \
+    rm -f -r '/var/lib/apt/' &&  rm -f -r '/var/cache/apt/' && \
     useradd -m -U -s /bin/bash -G sudo pusky && \
     echo 'pusky ALL=NOPASSWD: ALL' > /etc/sudoers.d/pusky
 
 USER pusky
-WORKDIR /home/pusky
-RUN mkdir source
-WORKDIR /home/pusky/source
-RUN mkdir sources
-RUN mkdir bin
-RUN openwrtbranch=openwrt-24.10
-RUN openwrttag=v24.10.0-rc5
-# set git config
-RUN git config --global user.name "pusky" && git config --global user.email "puskyer@gmail.com"
-# Download and update the sources
-RUN git clone https://git.openwrt.org/openwrt/openwrt.git -b openwrt-24.10 openwrt
-WORKDIR /home/pusky/source/openwrt
-RUN git pull
-RUN git fetch -t
-RUN git checkout v24.10.0-rc5
-RUN cp feeds.conf.default  feeds.conf
-COPY x86diffconfig .config
-RUN sudo chmod a+rwx .config
-RUN ln -s /home/pusky/source/sources dl
-RUN ln -s /home/pusky/source/bin bin
-RUN ./scripts/feeds update -a
-RUN ./scripts/feeds update -a
-RUN ./scripts/feeds install -a
-RUN make defconfig
-RUN make prereq
-RUN make download
-RUN make toolchain/compile
+RUN export openwrtbranch=openwrt-24.10 && export openwrttag=v24.10.0-rc5 && \
+    mkdir /home/pusky/source && mkdir /home/pusky/source/sources && \
+    git config --global user.name "pusky" && git config --global user.email "puskyer@gmail.com"
+
+WORKDIR /home/pusky/
+ 
+#RUN cd source/ && git clone https://git.openwrt.org/openwrt/openwrt.git -b openwrt-24.10 openwrt && \
+#    cd openwrt &&  git checkout openwrt-24.10 && git pull && \
+#    git fetch -t && git checkout v24.10.0-rc5 && git pull origin openwrt-24.10 && \
+#    ln -s /home/pusky/source/sources dl && cp feeds.conf.default  feeds.conf && \
+#    sudo chmod a+rwx .config && \
+#    ./scripts/feeds update -a && ./scripts/feeds install -a && \
+#    wget https://downloads.openwrt.org/releases/24.10.0-rc5/targets/x86/64/config.buildinfo -O .config && \
+#    make defconfig  # prereq download toolchain/compile
 
 CMD ["bash"]
 
