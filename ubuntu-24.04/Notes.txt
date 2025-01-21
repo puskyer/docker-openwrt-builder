@@ -1,0 +1,64 @@
+docker run -v "$HOME"/build/bin/:/home/pusky/source/openwrt/bin/ -v "$HOME"/build/archive/:/home/pusky/source/archive/  -it --user pusky openwrt/ubuntu22.04
+
+
+# Download and update the sources
+git clone https://git.openwrt.org/openwrt/openwrt.git
+cd openwrt
+git pull
+ 
+# Select a specific code revision
+git branch -a
+# Fetch and list tags
+git fetch -t
+git tag
+# checkout a tag
+git checkout v23.05.5
+ 
+# Update the feeds
+./scripts/feeds update -a
+./scripts/feeds install -a
+ 
+ln -s ../sources/ dl
+
+# Configure the firmware image
+make menuconfig
+make -j$(nproc)  prereq
+IGNORE_ERRORS=1 make -j1 V=sc world 2>&1 | tee build.log | grep -i -E "^make.*(error|[12345]...Entering dir)"
+make check
+ 
+# Optional: configure the kernel (usually not required)
+# Don't, unless have a strong reason to
+# make -j$(nproc) kernel_menuconfig
+ 
+# Build the firmware image
+make -j$(nproc) defconfig download clean world
+
+grep --color=always -i  " errors" build.log | less -R
+
+
+having this issue as well, building 23.05.2.
+I specified CONFIG_TARGET_ROOTFS_PARTSIZE in the .config and got the same warning: BIOS Boot Partition is under 1 MiB.
+
+had to use the following, but not sure why 1024 solves the issue:
+
+    changing 256 to 1024 on the line 56 of the target/linux/x86/image/Makefile indeed works.
+
+(line 52, not 56).
+
+define Build/combined
+        $(CP) $(KDIR)/$(KERNEL_NAME) $@.boot/boot/vmlinuz
+        -$(CP) $(STAGING_DIR_ROOT)/boot/. $@.boot/boot/
+        $(CP) $(STAGING_DIR_IMAGE)/grub2/boot.img $@.boot/boot/grub/
+        $(CP) $(STAGING_DIR_IMAGE)/grub2/$(if $(filter $(1),efi),gpt,$(GRUB2_VARIANT))-core.img \
+                $@.boot/boot/grub/core.img
+        $(if $(filter $(1),efi),
+                $(INSTALL_DIR) $@.boot/efi/boot
+                $(CP) $(STAGING_DIR_IMAGE)/grub2/boot$(if $(CONFIG_x86_64),x64,ia32).efi $@.boot/efi/boot/
+        )
+        PADDING="1" SIGNATURE="$(IMG_PART_SIGNATURE)" \
+                $(if $(filter $(1),efi),GUID="$(IMG_PART_DISKGUID)") $(SCRIPT_DIR)/gen_image_generic.sh \
+                $@ \
+                $(CONFIG_TARGET_KERNEL_PARTSIZE) $@.boot \
+                $(CONFIG_TARGET_ROOTFS_PARTSIZE) $(IMAGE_ROOTFS) \
+                1024
+endef

@@ -44,6 +44,7 @@ RUN echo America/Montreal >/etc/timezone && export DEBIAN_FRONTEND=noninteractiv
     'autoconf' \
     'automake' \
     'libtool' \
+    'htop' \
     'man-db' && \
     apt clean &&  apt autoremove && apt autoclean && \
     rm -f -r '/var/lib/apt/' &&  rm -f -r '/var/cache/apt/' && \
@@ -59,12 +60,11 @@ WORKDIR /home/pusky/
  
 #RUN cd source/ && git clone https://git.openwrt.org/openwrt/openwrt.git -b openwrt-24.10 openwrt && \
 #    cd openwrt &&  git checkout openwrt-24.10 && git pull && \
-#    git fetch -t && git checkout v24.10.0-rc5 && git pull origin openwrt-24.10 && \
-#    ln -s /home/pusky/source/sources dl && cp feeds.conf.default  feeds.conf && \
-#    sudo chmod a+rwx .config && \
+#    git fetch -t && git checkout v24.10.0-rc5 && \
+#    ln -s /home/pusky/source/sources dl && \
 #    ./scripts/feeds update -a && ./scripts/feeds install -a && \
 #    wget https://downloads.openwrt.org/releases/24.10.0-rc5/targets/x86/64/config.buildinfo -O .config && \
-#    make defconfig  # prereq download toolchain/compile
+#    make -j$(nproc) defconfig prereq download toolchain/compile
 
 CMD ["bash"]
 
