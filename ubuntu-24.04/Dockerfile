@@ -7,7 +7,7 @@
 ## RUN echo "$SSH_KEY" > /root/.ssh/id_rsa
 
 
-FROM ubuntu:noble
+FROM ubuntu:noble AS build
 
 RUN echo America/Montreal >/etc/timezone && export DEBIAN_FRONTEND=noninteractive && \
     apt update && apt -y upgrade && apt install --no-install-recommends --no-install-suggests --yes  \ 
@@ -51,12 +51,25 @@ RUN echo America/Montreal >/etc/timezone && export DEBIAN_FRONTEND=noninteractiv
     useradd -m -U -s /bin/bash -G sudo pusky && \
     echo 'pusky ALL=NOPASSWD: ALL' > /etc/sudoers.d/pusky
 
+RUN sudo su root 
+RUN groupmod -g 1002 ubuntu
+RUN usermod -u 1002 -g 1002 ubuntu
+RUN groupmod -g 1000 pusky
+RUN sudo usermod -u 1000 -g 1000 pusky
+
 USER pusky
-RUN export openwrtbranch=openwrt-24.10 && export openwrttag=v24.10.0-rc5 && \
-    mkdir /home/pusky/source && mkdir /home/pusky/source/sources && \
-    git config --global user.name "pusky" && git config --global user.email "puskyer@gmail.com"
 
 WORKDIR /home/pusky/
+COPY x86diffconfig /home/pusky/x86diffconfig
+
+RUN export openwrtbranch=openwrt-24.10 && export openwrttag=v24.10.0-rc5 && \
+    mkdir /home/pusky/source && mkdir /home/pusky/source/openwrt && mkdir /home/pusky/source/sources && \
+    ln -s /home/pusky/source/openwrt openwrt && ln -s /home/pusky/source/sources sources && \
+    rm -rf /home/pusky/source && \
+    git config --global user.name "pusky" && git config --global user.email "puskyer@gmail.com"
+
+
+
  
 #RUN cd source/ && git clone https://git.openwrt.org/openwrt/openwrt.git -b openwrt-24.10 openwrt && \
 #    cd openwrt &&  git checkout openwrt-24.10 && git pull && \
