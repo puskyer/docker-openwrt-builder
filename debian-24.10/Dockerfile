@@ -51,5 +51,5 @@ WORKDIR /workdir
 USER buildbot
 WORKDIR /home/buildbot/
 COPY x86diffconfig /home/buildbot/x86diffconfig
-git config --global user.name "pusky" && git config --global user.email "puskyer@gmail.com"
+RUN git config --global user.name "pusky" && git config --global user.email "puskyer@gmail.com"
 

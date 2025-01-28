@@ -45,6 +45,8 @@ RUN echo America/Montreal >/etc/timezone && export DEBIAN_FRONTEND=noninteractiv
     'automake' \
     'libtool' \
     'htop' \
+    'less' \
+    'screen' \
     'man-db' && \
     apt clean &&  apt autoremove && apt autoclean && \
     rm -f -r '/var/lib/apt/' &&  rm -f -r '/var/cache/apt/' && \
@@ -60,15 +62,16 @@ RUN sudo usermod -u 1000 -g 1000 pusky
 USER pusky
 
 WORKDIR /home/pusky/
-COPY x86diffconfig /home/pusky/x86diffconfig
+
+RUN chown pusky:pusky /home/pusky/ -R
+
+COPY --chown=pusky:pusky x86diffconfig /home/pusky/x86diffconfig
 
 RUN export openwrtbranch=openwrt-24.10 && export openwrttag=v24.10.0-rc5 && \
-    mkdir /home/pusky/source && mkdir /home/pusky/source/openwrt && mkdir /home/pusky/source/sources && \
-    ln -s /home/pusky/source/openwrt openwrt && ln -s /home/pusky/source/sources sources && \
-    rm -rf /home/pusky/source && \
+#    mkdir /home/pusky/source && mkdir /home/pusky/source/openwrt && mkdir /home/pusky/source/sources && \
+#    ln -s /home/pusky/source/openwrt openwrt && ln -s /home/pusky/source/sources sources && \
+#    rm -rf /home/pusky/source && \
     git config --global user.name "pusky" && git config --global user.email "puskyer@gmail.com"
-
-
 
  
 #RUN cd source/ && git clone https://git.openwrt.org/openwrt/openwrt.git -b openwrt-24.10 openwrt && \
