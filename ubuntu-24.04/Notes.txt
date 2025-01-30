@@ -62,3 +62,7 @@ define Build/combined
                 $(CONFIG_TARGET_ROOTFS_PARTSIZE) $(IMAGE_ROOTFS) \
                 1024
 endef
+
+Errors compiling rust
+nano ./build_dir/target-x86_64_musl/host/rustc-1.80.1-src/config.toml
+change download-ci-llvm = true to download-ci-llvm = false
